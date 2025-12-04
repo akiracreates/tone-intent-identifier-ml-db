@@ -1,0 +1,48 @@
+# -------------------------
+# Python
+# -------------------------
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# -------------------------
+# IDE / Editor files
+# -------------------------
+.idea/
+.vscode/
+*.iml
+
+# -------------------------
+# Data (DO NOT COMMIT CSVs)
+# -------------------------
+data/raw/*.csv
+data/processed/*.csv
+
+# Allow keeping folder structure
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/examples/.gitkeep
+
+# -------------------------
+# Outputs (Models, Metrics, Predictions)
+# -------------------------
+outputs/models/*
+outputs/metrics/*
+outputs/predictions/*
+
+# Keep structure
+!outputs/models/.gitkeep
+!outputs/metrics/.gitkeep
+!outputs/predictions/.gitkeep
+
+# -------------------------
+# System files
+# -------------------------
+.DS_Store
+Thumbs.db
