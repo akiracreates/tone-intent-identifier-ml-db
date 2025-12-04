@@ -1,186 +1,181 @@
 # Tone & Intent Identifier: ML + DB Suite
 
-> 🇷🇺 Educational project for the modules\
-> **МДК 01.01** -- "Разработка модулей программного обеспечения для
-> компьютерных систем"\
-> **МДК 11.01** -- "Технология разработки и защиты баз данных"\
-> Group: **ИСП9-Kh32**
+# System Description (English Version)
 
-A combined course project that integrates:
+> Course project for the disciplines:  
+> **MDK 01.01** — Development of Software Modules for Computer Systems  
+> **MDK 11.01** — Database Development and Security Technologies  
+> Group: **ISP9-Kh32**
 
--   a **machine learning pipeline** for determining the **tone** and
-    **communicative intent** of short text messages, and\
--   a **relational database** for storing messages, annotations, model
-    predictions, and analytics.
+This repository combines:
 
-Both course works (ML + DB) are implemented as one unified system.
+- a **machine learning subsystem** for classifying the **tone** and **intent** of short text messages;  
+- a **PostgreSQL relational database** for storing messages, labels, model predictions, and analytical SQL queries.
 
-------------------------------------------------------------------------
+Both course projects (ML + DB) are implemented as a single integrated system.
 
-## 1. Project Overview
+---
 
-### 1.1. What the project does
+## 1. Project Description
 
-The **Tone & Intent Identifier: ML + DB Suite**:
+### 1.1. Functionality
 
--   Takes short text messages from a dataset (CSV or similar).\
--   Predicts **two characteristics** per message:
-    -   **Tone** --- how the message sounds\
-    -   **Intent** --- what the message tries to achieve\
--   Saves all data, labels, and predictions into a **PostgreSQL**
-    database.\
--   Includes **analytical SQL queries** to evaluate results and explore
-    trends.
+**Tone & Intent Identifier: ML + DB Suite** allows you to:
 
-### 1.2. Who this project is for
+- accept text messages (short messages, comments, emails);  
+- determine two properties:  
+  - **Tone** of the message  
+  - **Intent** of the message  
+- store messages, true labels, and predictions inside **PostgreSQL**;  
+- run analytical SQL queries to evaluate model performance.
 
--   Students and instructors of ML and database development.\
--   Beginners looking for an approachable example of:
-    -   a classic ML text-classification workflow, and\
-    -   a structured database designed to support ML experiments.
+---
 
-------------------------------------------------------------------------
+### 1.2. Target Audience
 
-## 2. Tone & Intent Label System
+- Students learning ML or databases  
+- Beginners who want to see:  
+  - a clean ML pipeline using classical and neural methods  
+  - a properly designed database supporting ML experiments  
 
-The project uses **two separate classifiers**, producing **two
-independent predictions**:
+---
 
-### 2.1. Tone labels
+## 2. Label System (Tone & Intent)
 
-1.  `neutral`\
-2.  `positive_friendly`\
-3.  `negative_rude`\
-4.  `sarcastic_ironic`\
-5.  `formal`\
-6.  `informal_casual`
+The project uses **two separate classifiers**, producing **two independent predictions**.
 
-### 2.2. Intent labels
+### 2.1. Tone Labels
 
-7.  `request`\
-8.  `command_instruction`\
-9.  `complaint`\
-10. `praise_appreciation`\
-11. `clarification_question`\
-12. `statement_information`
+1. `neutral`  
+2. `positive_friendly`  
+3. `negative_rude`  
+4. `sarcastic_ironic`  
+5. `formal`  
+6. `informal_casual`  
 
-> The label set is intentionally balanced and can be expanded later.
+### 2.2. Intent Labels
 
-------------------------------------------------------------------------
+7. `request`  
+8. `command_instruction`  
+9. `complaint`  
+10. `praise_appreciation`  
+11. `clarification_question`  
+12. `statement_information`  
+
+---
 
 ## 3. Installation & Setup
 
-> Developed and tested on **Windows 10**.\
-> All steps assume a Windows environment.
+> Development and testing were performed on **Windows 10**.
 
 ### 3.1. Requirements
 
--   Python **3.10+**\
--   Git\
--   PostgreSQL **14 or 15**\
--   (Optional) pgAdmin UI
+- Python **3.10+**  
+- Git  
+- PostgreSQL **14 or 15**  
+- (Optional) pgAdmin  
 
-------------------------------------------------------------------------
+---
 
-### 3.2. Clone the repository
+### 3.2. Clone the Repository
 
-``` bash
+```bash
 git clone https://github.com/<username>/tone-intent-identifier-ml-db.git
 cd tone-intent-identifier-ml-db
 ```
 
-------------------------------------------------------------------------
+---
 
-### 3.3. Create a virtual environment
+### 3.3. Create Virtual Environment
 
-``` bash
+```bash
 python -m venv .venv
-.venv\Scriptsctivate
+.venv\Scripts\activate
 ```
 
-------------------------------------------------------------------------
+---
 
-### 3.4. Install dependencies
+### 3.4. Install Dependencies
 
-``` bash
+```bash
 pip install -r requirements.txt
 ```
 
-------------------------------------------------------------------------
+---
 
-### 3.5. Set up the PostgreSQL database
+### 3.5. PostgreSQL Configuration
 
-1.  Create the database:
+1. **Create the database:**
 
-    ``` sql
-    CREATE DATABASE tone_intent_db;
-    ```
+```sql
+CREATE DATABASE tone_intent_db;
+```
 
-2.  Set environment variables (PowerShell):
+2. **Set environment variables:**
 
-    ``` powershell
-    setx DB_HOST "localhost"
-    setx DB_PORT "5432"
-    setx DB_NAME "tone_intent_db"
-    setx DB_USER "<your_pg_user>"
-    setx DB_PASSWORD "<your_pg_password>"
-    ```
+```powershell
+setx DB_HOST "localhost"
+setx DB_PORT "5432"
+setx DB_NAME "tone_intent_db"
+setx DB_USER "<your_user>"
+setx DB_PASSWORD "<your_password>"
+```
 
-3.  Apply the database schema:
+3. **Apply database schema:**
 
-    ``` bash
-    psql -U <your_pg_user> -d tone_intent_db -f db_project/schema.sql
-    ```
+```bash
+psql -U <your_user> -d tone_intent_db -f db_project/schema.sql
+```
 
-------------------------------------------------------------------------
+---
 
 ## 4. Usage Examples
 
-### 4.1. Preprocess raw messages
+### 4.1. Data Preprocessing
 
-``` bash
+```bash
 python -m ml_project.preprocess ^
   --input data/raw/messages.csv ^
   --output data/processed/messages_clean.csv
 ```
 
-------------------------------------------------------------------------
+---
 
-### 4.2. Train tone and intent models
+### 4.2. Training Tone & Intent Models
 
-``` bash
+```bash
 python -m ml_project.train ^
   --config configs/tone_tfidf_logreg.yml
 ```
 
-``` bash
+```bash
 python -m ml_project.train ^
   --config configs/intent_tfidf_logreg.yml
 ```
 
-------------------------------------------------------------------------
+---
 
-### 4.3. Evaluate models
+### 4.3. Model Evaluation
 
-``` bash
+```bash
 python -m ml_project.evaluate ^
   --model outputs/models/tone_model.pkl ^
   --task tone ^
   --data data/processed/messages_clean.csv
 ```
 
-``` bash
+```bash
 python -m ml_project.evaluate ^
   --model outputs/models/intent_model.pkl ^
   --task intent ^
   --data data/processed/messages_clean.csv
 ```
 
-------------------------------------------------------------------------
+---
 
-### 4.4. Predict on new messages
+### 4.4. Predicting on New Data
 
-``` bash
+```bash
 python -m ml_project.predict ^
   --tone-model outputs/models/tone_model.pkl ^
   --intent-model outputs/models/intent_model.pkl ^
@@ -188,37 +183,37 @@ python -m ml_project.predict ^
   --output outputs/predictions/predictions.csv
 ```
 
-------------------------------------------------------------------------
+---
 
-### 4.5. Load predictions into the database
+### 4.5. Uploading Results to the Database
 
-``` bash
+```bash
 python -m db_project.load_results ^
   --messages data/processed/messages_clean.csv ^
   --predictions outputs/predictions/predictions.csv
 ```
 
-------------------------------------------------------------------------
+---
 
-### 4.6. Run analytical SQL queries
+### 4.6. Running SQL Analytics
 
-Example:
-
-``` bash
+```bash
 psql -d tone_intent_db -f db_project/queries/tone_accuracy_by_label.sql
 ```
 
-------------------------------------------------------------------------
+---
 
 ## 5. Repository Structure
 
 ```text
 tone-intent-identifier-ml-db/
 ├─ ml_project/
-│  ├─ __init__.py
-│  ├─ preprocess.py
-│  ├─ train_tone.py
-│  ├─ train_intent.py
+│  ├─ dataset_scripts/
+│  ├─ build_tokenizer_and_sequences.py
+│  ├─ prepare_task_datasets.py
+│  ├─ train_tone_cnn.py
+│  ├─ train_tone_lstm.py
+│  ├─ train_intent_tfidf_logreg.py
 │  ├─ evaluate.py
 │  └─ predict.py
 │
@@ -245,52 +240,45 @@ tone-intent-identifier-ml-db/
 ├─ README_RU.md
 ├─ .gitignore
 └─ requirements.txt
+```
 
-
-------------------------------------------------------------------------
+---
 
 ## 6. Technical Requirements
 
--   **Language:** Python 3.10+\
--   **ML libraries:**
-    -   pandas\
-    -   numpy\
-    -   scikit-learn\
-    -   matplotlib / seaborn (optional)\
--   **Database:** PostgreSQL 14 or 15\
--   **OS:** Windows 10\
--   **Hardware:** Any standard laptop (no GPU required)
+- **Programming language:** Python 3.10+  
+- **ML libraries:** pandas, numpy, scikit-learn, tensorflow/keras  
+- **Database:** PostgreSQL 14/15  
+- **OS:** Windows 10  
+- **Hardware:** Any standard laptop  
 
-------------------------------------------------------------------------
+---
 
 ## 7. Deployment & Hosting (Planned)
 
-The system is designed to run locally for coursework.\
-In the future, it can be hosted using:
+The educational version works locally.  
+For hosting, you may use:
 
--   A friend's machine with PostgreSQL\
--   A low-cost VPS (Hetzner, Contabo, DigitalOcean)\
--   Free-tier PostgreSQL hosting (Render, Railway, Supabase)
+- Personal server  
+- Budget VPS (Hetzner, Contabo, DigitalOcean)  
+- Free PostgreSQL hosting services (Render, Railway, Supabase)
 
-Instructions for hosting will be added later.
+---
 
-------------------------------------------------------------------------
+## 8. Author
 
-## 8. Authors & Roles
+**Amira Haggag / Хаггаг Амира**  
+Group: **ИСП9-Kh32**
 
-**Author:**\
-**Amira Haggag**\
-Group **ИСП9-Kh32**
+**Roles:**
+- ML module development  
+- Database design and development  
+- Technical documentation (EN + RU)
 
-**Roles:**\
-- ML module development (preprocessing, model training, evaluation)\
-- Database module development (schema design, queries, integrations)\
-- Documentation and technical writing (EN + RU)
+---
 
-------------------------------------------------------------------------
+## 9. Contacts
 
-## 9. Contact
-
--   **Email:** akiracreates.comms@gmail.com\
--   **Telegram:** https://t.me/akiracreates\
--   **GitHub:** https://github.com/https://github.com/akiracreates\
+- Email: akiracreates.comms@gmail.com  
+- Telegram: https://t.me/akiracreates  
+- GitHub: https://github.com/akiracreates  

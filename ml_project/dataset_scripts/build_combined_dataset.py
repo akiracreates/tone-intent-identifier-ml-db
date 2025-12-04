@@ -8,7 +8,7 @@ PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def load_processed(filename):
-    """Load processed tone or intent dataset from data/processed."""
+    """Load processed tone or intent dataset_scripts from data/processed."""
     path = PROCESSED_DIR / filename
     df = pd.read_csv(path)
 
@@ -66,7 +66,7 @@ def main():
         "tone_from_reddit.csv",
         "tone_from_twitter.csv",
     ]
-    # Load intent dataset
+    # Load intent dataset_scripts
     try:
         df_intent = load_processed("intent_from_chatbot.csv")
         print(f"Loaded intent_from_chatbot.csv → {len(df_intent)} rows")
@@ -111,11 +111,11 @@ def main():
     #Add final ID column
     combined.insert(0, "id", range(1, len(combined) + 1))
 
-    #Save combined dataset
+    #Save combined dataset_scripts
     out_path = PROCESSED_DIR / "combined_clean.csv"
     combined.to_csv(out_path, index=False, encoding="utf-8")
 
-    print(f"\nSUCCESS — Saved final dataset to:\n{out_path}")
+    print(f"\nSUCCESS — Saved final dataset_scripts to:\n{out_path}")
     print("Preview:")
     print(combined.head())
 
