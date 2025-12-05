@@ -40,3 +40,12 @@ outputs/
 *.npy
 *.pkl
 *.h5
+
+
+# --- Models & evaluation outputs ---
+outputs/models/*
+outputs/metrics/*
+outputs/predictions/*
+!outputs/models/.gitkeep
+!outputs/metrics/.gitkeep
+!outputs/predictions/.gitkeep
