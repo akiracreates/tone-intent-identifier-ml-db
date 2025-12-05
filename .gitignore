@@ -1,51 +1,70 @@
-# --- Python virtual environments ---
+# ============================================
+# Python Virtual Environments
+# ============================================
 .venv/
 venv/
 env/
 
-# --- IDE / OS files ---
+# ============================================
+# IDE / OS Metadata
+# ============================================
 .idea/
 .vscode/
 .DS_Store
 Thumbs.db
 
-# --- Python cache ---
+# ============================================
+# Python Cache
+# ============================================
 __pycache__/
 *.py[cod]
 
-# --- Jupyter checkpoints ---
+# ============================================
+# Jupyter
+# ============================================
 .ipynb_checkpoints/
 
-# --- Logs ---
+# ============================================
+# Logs
+# ============================================
 logs/
 *.log
 
-# --- Data: raw (not tracked) ---
+# ============================================
+# Data Folders
+# ============================================
+
+# Raw data should NEVER be tracked
 data/raw/*
 !data/raw/.gitkeep
 
-# --- Data: processed (only main CSVs tracked) ---
+# Processed datasets (large files) ignored
 data/processed/*
+!data/processed/.gitkeep
 
-# --- Outputs: models, metrics, predictions ---
+# Allow example datasets (small) to be tracked
+!data/examples/
+!data/examples/*
+
+# ============================================
+# Outputs (models, metrics, predictions)
+# ============================================
 outputs/*
 !outputs/.gitkeep
-
-data/raw/
-data/processed/
-outputs/
-*.csv
-
-# --- Large binary artifacts (models, arrays, pickles) ---
-*.npy
-*.pkl
-*.h5
-
-
-# --- Models & evaluation outputs ---
-outputs/models/*
-outputs/metrics/*
-outputs/predictions/*
 !outputs/models/.gitkeep
 !outputs/metrics/.gitkeep
 !outputs/predictions/.gitkeep
+
+# Ignore model files & large ML artifacts
+*.npy
+*.npz
+*.pkl
+*.h5
+*.hdf5
+
+
+# ============================================
+# Docs
+# ============================================
+docs/*
+!docs/.gitkeep

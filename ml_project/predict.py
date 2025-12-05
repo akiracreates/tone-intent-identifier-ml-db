@@ -2,6 +2,8 @@ import argparse
 import json
 from pathlib import Path
 
+from datetime import datetime
+
 import joblib
 import numpy as np
 import pandas as pd
@@ -75,7 +77,6 @@ def _load_artifacts():
         _TONE_LABELS = _load_idx_to_label(TONE_LABEL_MAPPING_PATH)
 
     if _INTENT_LABELS is None:
-        # from mapping file; could also read model.classes_
         _INTENT_LABELS = _load_idx_to_label(INTENT_LABEL_MAPPING_PATH)
 
 
@@ -98,6 +99,7 @@ def _probs_to_dict(labels, probs_row):
 def predict_single(text: str) -> dict:
     _load_artifacts()
 
+    # --- Tone ---
     X_tone = _preprocess_texts([text])
 
     probs_bilstm = _TONE_BILSTM.predict(X_tone, verbose=0)[0]
@@ -109,11 +111,12 @@ def predict_single(text: str) -> dict:
     tone_bilstm_label = _TONE_LABELS[idx_bilstm]
     tone_cnn_label = _TONE_LABELS[idx_cnn]
 
+    # --- Intent ---
     X_intent = _INTENT_VECTORIZER.transform([text])
     intent_probs = _INTENT_MODEL.predict_proba(X_intent)[0]
-    intent_classes = _INTENT_MODEL.classes_
+
     intent_idx = int(np.argmax(intent_probs))
-    intent_label = intent_classes[intent_idx]
+    intent_label = _INTENT_LABELS[intent_idx]  # ← decode to string label
 
     return {
         "text": text,
@@ -122,7 +125,8 @@ def predict_single(text: str) -> dict:
         "tone_cnn_pred": tone_cnn_label,
         "tone_cnn_probs": _probs_to_dict(_TONE_LABELS, probs_cnn),
         "intent_pred": intent_label,
-        "intent_probs": _probs_to_dict(intent_classes, intent_probs),
+        "intent_probs": _probs_to_dict(_INTENT_LABELS, intent_probs),
+        "predicted_at": datetime.utcnow().isoformat(),
     }
 
 
@@ -138,7 +142,7 @@ def predict_file(input_path: Path, output_path: Path):
 
     texts = df["text"].astype(str).tolist()
 
-    # Tone
+    # --- Tone ---
     X_tone = _preprocess_texts(texts)
     probs_bilstm = _TONE_BILSTM.predict(X_tone, verbose=0)
     probs_cnn = _TONE_CNN.predict(X_tone, verbose=0)
@@ -153,21 +157,24 @@ def predict_file(input_path: Path, output_path: Path):
         _TONE_LABELS[i] for i in idx_cnn
     ]
 
-    # per-class probabilities for tone
     for class_idx, label in enumerate(_TONE_LABELS):
         df[f"tone_bilstm_prob_{label}"] = probs_bilstm[:, class_idx]
         df[f"tone_cnn_prob_{label}"] = probs_cnn[:, class_idx]
 
-    # Intent
+    # --- Intent ---
     X_intent = _INTENT_VECTORIZER.transform(texts)
     intent_probs = _INTENT_MODEL.predict_proba(X_intent)
-    intent_classes = list(_INTENT_MODEL.classes_)
-    intent_pred = _INTENT_MODEL.predict(X_intent)
 
-    df["intent_pred"] = intent_pred
+    # argmax over columns → integer indices / classes
+    intent_idx = intent_probs.argmax(axis=1)
+    df["intent_pred"] = [
+        _INTENT_LABELS[i] for i in intent_idx
+    ]
 
-    for class_idx, label in enumerate(intent_classes):
+    for class_idx, label in enumerate(_INTENT_LABELS):
         df[f"intent_prob_{label}"] = intent_probs[:, class_idx]
+
+    df["predicted_at"] = datetime.utcnow().isoformat()
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(output_path, index=False)
