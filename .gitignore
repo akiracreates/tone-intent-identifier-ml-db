@@ -26,15 +26,15 @@ data/raw/*
 
 # --- Data: processed (only main CSVs tracked) ---
 data/processed/*
-!data/processed/.gitkeep
-!data/processed/combined_clean.csv
-!data/processed/labels_raw.csv
 
 # --- Outputs: models, metrics, predictions ---
 outputs/*
 !outputs/.gitkeep
 
-
+data/raw/
+data/processed/
+outputs/
+*.csv
 
 # --- Large binary artifacts (models, arrays, pickles) ---
 *.npy
